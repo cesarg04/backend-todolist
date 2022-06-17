@@ -1,11 +1,21 @@
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
+const history = require('connect-history-api-fallback');
+const { dbConection } = require('../database/config');
 class Server {
 
     constructor() {
         this.app = express()
         this.port = process.env.PORT
-        this.usuariosPath = '/api/usuarios';
+        this.usuariosPath = {
+            usuarios: '/api/usuarios',
+            auth: '/api/auth',
+            tareas: '/api/tareas',
+            test: '/api/test'
+        } ;
+
+        // ConectarDB
+        this.conectarDB();
 
         // Middelwares
         this.middelwares();
@@ -16,20 +26,28 @@ class Server {
 
     middelwares() {
 
+       
         // Cors
-        this,this.app.use( cors() )
+        this.app.use( cors() )
 
         //Lectura y parseo del body
         this.app.use( express.json() )
 
         // Directorio Publico
         this.app.use(express.static('public'))
+
+    }
+
+    async conectarDB(){
+        await dbConection()
     }
 
     routes() {
 
-        this.app.use(this.usuariosPath, require('../routes/usuarios'));
-
+        this.app.use(this.usuariosPath.usuarios, require('../routes/usuarios.router'))
+        this.app.use(this.usuariosPath.auth, require('../routes/login.router'))
+        this.app.use(this.usuariosPath.tareas, require('../routes/tareas.router'))
+        this.app.use(this.usuariosPath.test, require('../routes/test.router'))
     }
 
     listen() {
