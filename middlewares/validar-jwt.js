@@ -14,6 +14,14 @@ const validarJWT = async(req = request, res = response, next) => {
     }
 
 
+    // Comprobar si el JWT esta expirado
+    const { exp } = jwt.decode(token);
+    if (exp < (new Date().getTime() + 1) / 1000) {
+        return res.status(401).json({
+            msg: 'Token expired'
+        });
+    }
+
 
     try {
         

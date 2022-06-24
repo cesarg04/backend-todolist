@@ -32,7 +32,6 @@ const getTareasId = async(req = request, res = response ) => {
     const tarea = await tareas.findById( id )
 
     res.json({
-
         tarea
 
     })
@@ -76,6 +75,25 @@ const actualizarTarea = async( req = request, res = response ) => {
 
 }
 
+const actualizarEstadoTarea = async(req = request, res = response) => {
+    const { id } = req.params;
+
+    const { completada } = req.body;
+
+    console.log(completada)
+
+    const tarea = await tareas.findByIdAndUpdate(id, {completada: true}, { new: true })
+
+    res.json({
+        msg: "Tasl completed",
+        tarea
+    })
+
+
+
+}
+
+
 const eliminarTarea = async(req = request, res = response) => {
 
     const { id } = req.params;
@@ -95,5 +113,6 @@ module.exports = {
     crearTarea,
     getTareasId,
     actualizarTarea,
+    actualizarEstadoTarea,
     eliminarTarea
 }

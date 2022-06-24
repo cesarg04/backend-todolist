@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { crearTarea, getTareas, getTareasId, actualizarTarea, eliminarTarea } = require('../controllers/tareas.controller');
+const { crearTarea, getTareas, getTareasId, actualizarTarea, eliminarTarea, actualizarEstadoTarea } = require('../controllers/tareas.controller');
 const { validarCampos } = require('../middlewares/validar-campos');
 const validarJWT = require('../middlewares/validar-jwt');
 
@@ -36,6 +36,11 @@ router.put('/:id', [
     check('descripcion', 'La descripcion es obligatoria').not().isEmpty(),
     validarCampos
 ],actualizarTarea)
+
+// Actualizar estado de la tarea
+router.put('/complete/:id', [
+    validarJWT
+], actualizarEstadoTarea)
 
 router.delete('/:id', [
     validarJWT
